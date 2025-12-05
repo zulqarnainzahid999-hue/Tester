@@ -1,0 +1,96 @@
+import tkinter as tk
+import math
+
+# ==== FUNCTIONS ====
+def click(btn):
+    current = display.get()
+    if btn == "C":
+        display.delete(0, tk.END)
+    elif btn == "=":
+        try:
+            result = str(eval(current))
+            display.delete(0, tk.END)
+            display.insert(tk.END, result)
+        except:
+            display.delete(0, tk.END)
+            display.insert(tk.END, "Error")
+    elif btn == "√":
+        try:
+            result = str(math.sqrt(float(current)))
+            display.delete(0, tk.END)
+            display.insert(tk.END, result)
+        except:
+            display.delete(0, tk.END)
+            display.insert(tk.END, "Error")
+    elif btn == "sin":
+        result = str(math.sin(math.radians(float(current))))
+        display.delete(0, tk.END)
+        display.insert(tk.END, result)
+    elif btn == "cos":
+        result = str(math.cos(math.radians(float(current))))
+        display.delete(0, tk.END)
+        display.insert(tk.END, result)
+    elif btn == "tan":
+        result = str(math.tan(math.radians(float(current))))
+        display.delete(0, tk.END)
+        display.insert(tk.END, result)
+    elif btn == "log":
+        result = str(math.log10(float(current)))
+        display.delete(0, tk.END)
+        display.insert(tk.END, result)
+    else:
+        display.insert(tk.END, btn)
+
+
+# ==== WINDOW ====
+root = tk.Tk()
+root.title("Aesthetic Scientific Calculator")
+root.geometry("360x560")
+root.resizable(False, False)
+
+# ==== GRADIENT AESTHETIC BACKGROUND ====
+canvas = tk.Canvas(root, width=360, height=560)
+canvas.pack(fill="both", expand=True)
+
+# Gradient effect (simple stripes)
+colors = ["#ff9a9e", "#fad0c4", "#fad0c4", "#fbc2eb", "#a18cd1"]
+h = 560 // len(colors)
+
+for i, c in enumerate(colors):
+    canvas.create_rectangle(0, i*h, 360, (i+1)*h, fill=c, outline=c)
+
+# ==== DISPLAY ====
+display = tk.Entry(root, font=("Arial", 26, "bold"), bd=0, relief=tk.FLAT,
+                   bg="#ffffff", fg="#000000", justify="right")
+display_window = canvas.create_window(10, 20, anchor="nw", width=340, height=70, window=display)
+
+# ==== BUTTONS ====
+buttons = [
+    ["C", "√", "log", "/"],
+    ["sin", "cos", "tan", "*"],
+    ["7", "8", "9", "-"],
+    ["4", "5", "6", "+"],
+    ["1", "2", "3", "="],
+    ["0", ".", "(", ")"]
+]
+
+btn_colors = "#ffffff"
+btn_text = "#000000"
+btn_radius = 20
+
+y_offset = 110
+
+for row in buttons:
+    x_offset = 10
+    for btn in row:
+        b = tk.Button(root, text=btn, font=("Arial", 16, "bold"),
+                      bg=btn_colors, fg=btn_text,
+                      relief="flat", bd=0,
+                      activebackground="#e0e0e0",
+                      command=lambda x=btn: click(x))
+        canvas.create_window(x_offset, y_offset, anchor="nw",
+                             width=80, height=55, window=b)
+        x_offset += 90
+    y_offset += 65
+
+root.mainloop()
